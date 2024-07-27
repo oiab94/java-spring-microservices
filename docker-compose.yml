@@ -11,7 +11,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
 
   app:
-    image: springboot-app:latest
+    image: oiab994/springboot-app:latest
     container_name: app
     ports:
       - "8080:8080"
