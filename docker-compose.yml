@@ -3,20 +3,19 @@ version: '3.1'
 services:
   mongo:
     image: mongo:latest
-    container_name: product-service-db
+    container_name: mongo
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
 
-  product-service:
-    build: .
-    depends_on:
-      - mongo
+  app:
+    image: springboot-app
+    container_name: app
     ports:
       - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mongodb://mongo:27017/product-service
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mongo
+    links:
+      - mongo
