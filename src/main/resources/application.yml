@@ -4,6 +4,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://localhost:27017/product-service
+      uri: mongodb://mongo:27017/products
+      database: products
       username: root
       password: root
