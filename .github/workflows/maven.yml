@@ -26,11 +26,23 @@ jobs:
     - name: Build and Test with Maven
       run: mvn clean install
 
-    - name: Pull containers
+    # Continuous Development
+    - name: Build and Push the APP image to Docker Hub
+      uses: mr-smithers-excellent/docker-build-push@v6
+
+      with:
+        image: oiab994/springboot-app
+        tags: v0.1, latest
+        registry: docker.io
+        dockerfile: Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Pull mongo image
       run: docker pull mongo:latest
 
-    - name: Create a new image
-      run: docker build . -t "app:latest"
+    - name: Pull APP image
+      run: docker pull oiab994/springboot-app:latest
 
     - name: Run docker compose
       run: docker-compose up -d
@@ -38,15 +50,3 @@ jobs:
     - name: Stop containers
       if: always()
       run: docker-compose down
-
-    # Continuous Development
-    - name: Build and Push docker image
-      uses: mr-smithers-excellent/docker-build-push@v6
-
-      with:
-        image: oiab994/product-service
-        tags: v1, latest
-        registry: docker.io
-        dockerfile: Dockerfile
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
