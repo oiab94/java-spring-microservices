@@ -33,11 +33,11 @@ jobs:
       run: docker build . -t "app:latest"
 
     - name: Run docker compose
-      run: docker-compose -f "docker-compose.yml" up -d --build
+      run: docker-compose up -d
 
     - name: Stop containers
       if: always()
-      run: docker-compose -f "docker-compose.yml" down
+      run: docker-compose down
 
     # Continuous Development
     - name: Build and Push docker image
