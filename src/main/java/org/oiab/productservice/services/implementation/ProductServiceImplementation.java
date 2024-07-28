@@ -12,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ProductServiceImplementation implements ProductService {
@@ -34,5 +37,20 @@ public class ProductServiceImplementation implements ProductService {
 
     log.info("Product saved: {}", savedProduct);
     return productResponseDto;
+  }
+
+  /**
+   * Get all products
+   * @return List<ProductResponseDto> {id, name, description, price}
+   */
+  @Override
+  public List<ProductResponseDto> findAll() {
+    List<Product> products = productRepository.findAll();
+
+    log.info("Products found: {}", products.size());
+    return products
+        .stream()
+        .map(productResponseMapper::mapToDto)
+        .toList();
   }
 }
