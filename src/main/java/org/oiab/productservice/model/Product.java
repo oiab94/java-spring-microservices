@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Document(collection = "products")
 public class Product {
   @Id
-  private Long id;
+  private String id;
 
   private String name;
 
