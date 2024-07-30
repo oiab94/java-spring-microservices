@@ -9,4 +9,6 @@ public interface ProductService {
   ProductResponseDto save(ProductRequestDto productRequest);
 
   List<ProductResponseDto> findAll();
+
+  List<ProductResponseDto> findByName(String name);
 }

@@ -28,4 +28,12 @@ public class ProductController {
   public List<ProductResponseDto> findAll() {
     return this.productService.findAll();
   }
+
+  @GetMapping(params = "name")
+  @ResponseStatus(HttpStatus.OK)
+  public List<ProductResponseDto> findByName(
+    @RequestParam String name
+  ) {
+    return this.productService.findByName(name);
+  }
 }

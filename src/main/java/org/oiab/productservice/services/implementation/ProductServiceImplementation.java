@@ -53,4 +53,14 @@ public class ProductServiceImplementation implements ProductService {
         .map(productResponseMapper::mapToDto)
         .toList();
   }
+
+  @Override
+  public List<ProductResponseDto> findByName(String name) {
+    List<Product> products = productRepository.findByName(name);
+
+    return products
+      .stream()
+      .map(productResponseMapper::mapToDto)
+      .toList();
+  }
 }
