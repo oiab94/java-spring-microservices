@@ -31,9 +31,7 @@ public class ProductController {
 
   @GetMapping(params = "name")
   @ResponseStatus(HttpStatus.OK)
-  public List<ProductResponseDto> findByName(
-    @RequestParam String name
-  ) {
+  public List<ProductResponseDto> findByName(@RequestParam String name) {
     return this.productService.findByName(name);
   }
 }
