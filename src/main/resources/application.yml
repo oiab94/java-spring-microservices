@@ -2,7 +2,5 @@ spring:
   application:
     name: product-service
 
-  data:
-    mongodb:
-      uri: mongodb://mongo:27017/products
-      database: products
+  profiles:
+    active: "develop"

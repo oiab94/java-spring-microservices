@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: develop
+
+datasource:
+  mongodb:
+    uri: mongodb://localhost:27017/products
+    database: products
