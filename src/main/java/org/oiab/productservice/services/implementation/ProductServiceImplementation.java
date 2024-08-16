@@ -9,16 +9,14 @@ import org.oiab.productservice.model.Product;
 import org.oiab.productservice.repositories.ProductRepository;
 import org.oiab.productservice.services.ProductService;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class ProductServiceImplementation implements ProductService {
-  private static final Logger log = LoggerFactory.getLogger(ProductServiceImplementation.class);
+  private final Logger log;
   private final ProductRepository productRepository;
   private final ProductRequestMapperImplementation productRequestMapper;
   private final ProductResponseMapperImplementation productResponseMapper;
