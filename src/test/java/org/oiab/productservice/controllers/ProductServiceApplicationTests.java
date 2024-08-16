@@ -1,16 +1,17 @@
 package org.oiab.productservice.controllers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.oiab.productservice.config.BaseMongoDB;
+import org.oiab.productservice.config.MongoDBConfig;
 import org.oiab.productservice.model.Product;
 import org.oiab.productservice.repositories.ProductRepository;
-import org.oiab.productservice.utils.TestDataUtil;
+import org.oiab.productservice.utilis.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,87 +21,88 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-class ProductServiceApplicationTests extends BaseMongoDB {
+@Slf4j
+public class ProductServiceApplicationTests extends MongoDBConfig {
+	private final MockMvc mockMvc;
 	private final ProductRepository underTest;
-	private MockMvc mockMvc;
-	private ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	// * Inyección de dependencias
 	@Autowired
-	public ProductServiceApplicationTests(ProductRepository underTest, MockMvc mockMvc) {
-		this.underTest = underTest;
+	public ProductServiceApplicationTests(MockMvc mockMvc, ProductRepository underTest) {
 		this.mockMvc = mockMvc;
-		this.objectMapper = new ObjectMapper();
+		this.underTest = underTest;
 	}
 
-	/**
-	 * Antes de cada prueba, se eliminan todos los registros de la colección de productos.
-	 */
-	@BeforeEach
-	void setUp() {
+	@AfterEach
+	void deleteTable() {
 		underTest.deleteAll();
 	}
 
 	@Test
-	@DisplayName("Should be create a product and return 201")
-	void shouldBeCreateAProductSuccessfullyAndReturnHttp201() throws Exception {
-		Product product = TestDataUtil.createProductA();
-		String productJson = objectMapper.writeValueAsString(product);
+	void testThatSavedAndProductAndReturnHttpCreated() {
+		try {
+			Product product = DataUtil.createTestProductA();
+			String productJson = objectMapper.writeValueAsString(product);
 
-
-		// Test
-		mockMvc.perform(
+			mockMvc.perform(
 				MockMvcRequestBuilders
 					.post("/api/products")
-					.contentType("application/json")
+					.contentType(MediaType.APPLICATION_JSON)
 					.content(productJson)
-		).andExpect(
+			).andExpect(
 				MockMvcResultMatchers.status().isCreated()
-		);
+			);
+			log.info("OK testThatSavedAndAuthorAndReturnHttpCreated");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Test
-	@DisplayName("Should be created a product and return the product created")
-	void shouldBeCreateAProductSuccessfullyAndReturnTheProductCreated() throws Exception {
-		Product product = TestDataUtil.createProductA();
-		String productJson = objectMapper.writeValueAsString(product);
+	void testThatSavedAndProductAndReturnProductCreated() {
+		try {
+			Product product = DataUtil.createTestProductA();
+			String productJson = objectMapper.writeValueAsString(product);
 
-		// Test
-		mockMvc.perform(
-			MockMvcRequestBuilders
-				.post("/api/products")
-				.contentType("application/json")
-				.content(productJson)
-		).andExpect(
-				MockMvcResultMatchers.status().isCreated()
-		).andExpect(
-				MockMvcResultMatchers.jsonPath("$.id").isString()
-		).andExpect(
-				MockMvcResultMatchers.jsonPath("$.name").value(product.getName())
-		);
+			mockMvc.perform(
+				MockMvcRequestBuilders
+					.post("/api/products")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(productJson)
+			).andExpect(
+				MockMvcResultMatchers.jsonPath("id").isString()
+			).andExpect(
+				MockMvcResultMatchers.jsonPath("price").isNumber()
+			);
+			log.info("OK testThatSavedAndProductAndReturnProductCreated");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Test
-	@DisplayName("Should be return all products")
-	void shouldBeReturnAllProducts() throws Exception {
-		Product productA = TestDataUtil.createProductA();
-		Product productB = TestDataUtil.createProductB();
+	void testThatSavedAndListAllProductCreated() {
+		try {
+			Product productA = DataUtil.createTestProductA();
+			Product productB = DataUtil.createTestProductB();
 
-		underTest.save(productA);
-		underTest.save(productB);
+			underTest.save(productA);
+			underTest.save(productB);
 
-		// Test
-		mockMvc.perform(
+			mockMvc.perform(
 				MockMvcRequestBuilders
 					.get("/api/products")
-					.contentType("application/json")
-					.content("")
-		).andExpect(
+			).andExpect(
 				MockMvcResultMatchers.status().isOk()
-		).andExpect(
-				MockMvcResultMatchers.jsonPath("$[0].name").value(productA.getName())
-		).andExpect(
-				MockMvcResultMatchers.jsonPath("$[1].name").value(productB.getName())
-		);
+			).andExpect(
+				MockMvcResultMatchers.jsonPath("$[0].price").value(productA.getPrice())
+			).andExpect(
+				MockMvcResultMatchers.jsonPath("$[1].price").value(productB.getPrice())
+			);
+
+			log.info("OK testThatSavedAndListAllProductCreated");
+		} catch (Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 }

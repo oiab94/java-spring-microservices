@@ -1,6 +1,6 @@
 spring:
   application:
-    name: develop
+    name: local
 
 datasource:
   mongodb:

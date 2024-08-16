@@ -3,4 +3,4 @@ spring:
     name: product-service
 
   profiles:
-    active: "develop"
+    active: "local"

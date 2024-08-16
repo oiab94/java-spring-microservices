@@ -31,10 +31,8 @@ public class ProductServiceImplementation implements ProductService {
   public ProductResponseDto save(ProductRequestDto productRequest) {
     Product product = productRequestMapper.mapToEntity(productRequest);
     Product savedProduct = productRepository.save(product);
-    ProductResponseDto productResponseDto = productResponseMapper.mapToDto(savedProduct);
 
-    log.info("Product saved: {}", savedProduct);
-    return productResponseDto;
+	  return productResponseMapper.mapToDto(savedProduct);
   }
 
   /**
@@ -45,7 +43,6 @@ public class ProductServiceImplementation implements ProductService {
   public List<ProductResponseDto> findAll() {
     List<Product> products = productRepository.findAll();
 
-    log.info("Products found: {}", products.size());
     return products
         .stream()
         .map(productResponseMapper::mapToDto)
