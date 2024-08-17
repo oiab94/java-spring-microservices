@@ -1,6 +1,5 @@
 spring:
-  application:
-    name: product-service
-
-  profiles:
-    active: "deploy"
+  data:
+    mongodb:
+      uri: mongodb://mongo:27017/products-test
+      database: products-test
