@@ -22,6 +22,12 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+        token: ${{ secrets.TC_CLOUD_TOKEN }}
+
+    - name: Setup Testcontainers Cloud Client
+      uses: atomicjar/testcontainers-cloud-action@v1
+      with:
+          token: ${{ secrets.TC_CLOUD_TOKEN }}
 
     - name: Run tests
       run: mvn test
