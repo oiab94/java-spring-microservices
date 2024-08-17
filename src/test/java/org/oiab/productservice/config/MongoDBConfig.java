@@ -14,7 +14,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Slf4j
 public class MongoDBConfig {
 	@Container
-	 static  MongoDBContainer MY_MONGO_CONTAINER = new MongoDBContainer("mongo:latest");
+	 static  MongoDBContainer MY_MONGO_CONTAINER = new MongoDBContainer("mongo:latest")
+			.withExposedPorts(27017);
 
 	@DynamicPropertySource
 	static void containerProperties(DynamicPropertyRegistry registry) {
@@ -27,13 +28,7 @@ public class MongoDBConfig {
 
 	@BeforeAll
 	static void startMongoDB() {
-		log.info("START MongoTestContainer");
+		log.info("START MongoContainer: " + MY_MONGO_CONTAINER.getContainerName());
 		MY_MONGO_CONTAINER.start();
-	}
-
-	@AfterAll
-	static void stopMongoDB() {
-		log.info("STOP MongoTestContainer");
-		MY_MONGO_CONTAINER.stop();
 	}
 }
