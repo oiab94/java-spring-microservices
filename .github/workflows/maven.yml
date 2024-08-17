@@ -23,11 +23,11 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Build and Install with Maven
-      run: mvn clean install
-
     - name: Run tests
       run: mvn test
+
+    - name: Build and package
+      run: mvn clean package
 
 
     # Continuous Development
